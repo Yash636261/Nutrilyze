@@ -74,8 +74,8 @@ export default function Component() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-4 lg:p-8">
-      <div className="max-w-7xl mx-auto bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+    <div className="min-h-screen bg-white dark:bg-gray-800 ">
+      <div className=" bg-white dark:bg-gray-800 overflow-hidden">
         {/* Header */}
         <div className="flex items-center justify-between p-4 lg:p-6 border-b dark:border-gray-700">
           <Button variant="ghost" size="icon">
@@ -160,7 +160,7 @@ export default function Component() {
                   <text
                     x="18"
                     y="22"
-                    className="text-4xl font-bold"
+                    className="text-xl font-bold"
                     textAnchor="middle"
                     fill="currentColor"
                   >
@@ -183,16 +183,6 @@ export default function Component() {
                 </Button>
               </div>
             </div>
-
-            {/* Review Button */}
-            <Card className="mt-8 p-6 bg-green-50 dark:bg-green-900/20 border-green-100 dark:border-green-900">
-              <p className="text-center text-green-800 dark:text-green-200 font-medium mb-4">
-                Do you want to have a personal recommendation for this product?
-              </p>
-              <Button className="w-full bg-white text-green-600 hover:bg-green-50 dark:bg-green-800 dark:text-green-100 py-6 text-lg">
-                Review product
-              </Button>
-            </Card>
           </div>
 
           {/* Right Column */}
