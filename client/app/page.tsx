@@ -5,6 +5,8 @@ import { Menu, X, User, LogOut } from "lucide-react";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import FAQ from "@/components/shared/FAQ";
+import Footer from "@/components/shared/Footer";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,6 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import Story from "@/components/shared/Story";
 
 const menuItems = [
   { name: "Product", href: "#" },
@@ -21,6 +24,8 @@ const menuItems = [
 ];
 
 const page = () => {
+  const { user, isLoading } = useUser();
+
   return (
     <div>
       <Header />
@@ -49,14 +54,25 @@ const page = () => {
               suitable for you, considering your diseases.
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">
-              <a
-                href="/api/auth/login"
-                className="group flex h-10 items-center justify-center rounded-md border border-orange-600 bg-gradient-to-b from-orange-400 via-orange-500 to-orange-600 px-4 text-neutral-50 shadow-[inset_0_1px_0px_0px_#fdba74] active:[box-shadow:none]"
-              >
-                <span className="block group-active:[transform:translate3d(0,1px,0)]">
-                  Get started
-                </span>
-              </a>
+              {isLoading ? null : user ? (
+                <Link
+                  href="/onboarding"
+                  className="group flex h-10 items-center justify-center rounded-md border border-orange-600 bg-gradient-to-b from-orange-400 via-orange-500 to-orange-600 px-4 text-neutral-50 shadow-[inset_0_1px_0px_0px_#fdba74] active:[box-shadow:none]"
+                >
+                  <span className="block group-active:[transform:translate3d(0,1px,0)]">
+                    Get started
+                  </span>
+                </Link>
+              ) : (
+                <Link
+                  href="/api/auth/login"
+                  className="group flex h-10 items-center justify-center rounded-md border border-orange-600 bg-gradient-to-b from-orange-400 via-orange-500 to-orange-600 px-4 text-neutral-50 shadow-[inset_0_1px_0px_0px_#fdba74] active:[box-shadow:none]"
+                >
+                  <span className="block group-active:[transform:translate3d(0,1px,0)]">
+                    Get started
+                  </span>
+                </Link>
+              )}
 
               <a
                 href="/api/auth/login"
@@ -68,7 +84,52 @@ const page = () => {
           </div>
         </div>
       </div>
+      <Story />
+      <FAQ />
+      <CTA />
+      <Footer />
     </div>
+  );
+};
+
+const CTA = () => {
+  const { user, isLoading } = useUser();
+
+  return (
+    <section className="relative flex flex-col items-center overflow-hidden py-20 ">
+      <span className="pointer-events-none absolute top-0 block aspect-square w-[250%] rounded-full shadow-[0px_0px_16px_0px_rgba(0,0,0,0.40)_inset,0px_0px_80px_0px_rgba(0,0,0,0.6)_inset,0px_0px_160px_0px_rgba(0,0,0,0.2)_inset] dark:shadow-[0px_0px_16px_0px_rgba(255,255,255,0.40)_inset,0px_0px_80px_0px_rgba(255,255,255,0.6)_inset,0px_0px_160px_0px_rgba(255,255,255,0.2)_inset]" />
+      <div className="container mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
+        <div className="relative">
+          <div className="mx-auto flex flex-col items-center pt-10 text-center lg:max-w-2xl">
+            <h2 className="max-w-md text-balance text-3xl font-bold leading-tight sm:max-w-2xl sm:text-4xl lg:max-w-3xl lg:text-5xl xl:max-w-4xl">
+              take a step towards a{" "}
+              <span className="text-green-500"> healthier</span> life
+            </h2>
+            <div className="mt-8 inline-flex items-center gap-2 sm:gap-3 lg:mt-8">
+              {isLoading ? null : user ? (
+                <Link
+                  href="/onboarding"
+                  className="group h-10 select-none rounded-lg bg-blue-600 px-4 text-sm leading-8 text-zinc-50 shadow-[0_-1px_0_1px_#1e3a8a_inset,0_0_0_1px_#1d4ed8_inset,0_0.5px_0_1.5px_#60a5fa_inset] hover:bg-blue-700 active:bg-blue-800 active:shadow-[-1px_0px_1px_0px_rgba(0,0,0,.2)_inset,1px_0px_1px_0px_rgba(0,0,0,.2)_inset,0px_0.125rem_0px_0px_rgba(0,0,0,.6)_inset]"
+                >
+                  <span className="block group-active:[transform:translate3d(0,1px,0)]">
+                    Get started
+                  </span>
+                </Link>
+              ) : (
+                <Link
+                  href="/api/auth/login"
+                  className="group h-10 select-none rounded-lg bg-blue-600 px-4 text-sm leading-8 text-zinc-50 shadow-[0_-1px_0_1px_#1e3a8a_inset,0_0_0_1px_#1d4ed8_inset,0_0.5px_0_1.5px_#60a5fa_inset] hover:bg-blue-700 active:bg-blue-800 active:shadow-[-1px_0px_1px_0px_rgba(0,0,0,.2)_inset,1px_0px_1px_0px_rgba(0,0,0,.2)_inset,0px_0.125rem_0px_0px_rgba(0,0,0,.6)_inset]"
+                >
+                  <span className="block group-active:[transform:translate3d(0,1px,0)]">
+                    Get started
+                  </span>
+                </Link>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 };
 
@@ -89,29 +150,14 @@ const Header = () => {
             <span className="text-orange-500">Healthy</span>
           </Link>
         </div>
-        <nav className="hidden lg:block">
-          <ul className="inline-flex space-x-8">
-            {menuItems.map((item) => (
-              <li key={item.name}>
-                <Link
-                  href={item.href}
-                  className="text-sm font-semibold text-foreground hover:text-primary"
-                >
-                  {item.name}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
+
         <div className="hidden lg:block">
-          {isLoading ? (
-            <Button disabled>Loading...</Button>
-          ) : user ? (
+          {isLoading ? null : user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="ghost"
-                  className="relative h-8 w-8 rounded-full"
+                  className="relative h-8 w-8 rounded-full border"
                 >
                   <Avatar className="h-8 w-8">
                     <AvatarImage
