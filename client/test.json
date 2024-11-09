@@ -343,7 +343,8 @@
           "en": "https://images.openfoodfacts.org/images/products/890/208/000/0227/packaging_en.42.100.jpg"
         }
       }
-    }
+    },
+    "nutriscore_score": 9
   },
   {
     "code": "8901030922787",
@@ -612,7 +613,8 @@
           "en": "https://images.openfoodfacts.org/images/products/890/103/092/2787/ingredients_en.10.100.jpg"
         }
       }
-    }
+    },
+    "nutriscore_score": 13
   },
   {
     "_id": "7622300336738",
@@ -895,7 +897,8 @@
           "sv": "https://images.openfoodfacts.org/images/products/762/230/033/6738/ingredients_sv.242.100.jpg"
         }
       }
-    }
+    },
+    "nutriscore_score": 19
   },
   {
     "_id": "8901063029217",
@@ -1322,7 +1325,8 @@
           "en": "https://images.openfoodfacts.org/images/products/890/106/302/9217/ingredients_en.29.100.jpg"
         }
       }
-    }
+    },
+    "nutriscore_score": 24
   },
   {
     "_id": "5949000500538",
@@ -1583,7 +1587,8 @@
           "ro": "https://images.openfoodfacts.org/images/products/594/900/050/0538/ingredients_ro.23.100.jpg"
         }
       }
-    }
+    },
+    "nutriscore_score": 17
   },
   {
     "_id": "8901764042911",
@@ -1774,7 +1779,8 @@
           "en": "https://images.openfoodfacts.org/images/products/890/176/404/2911/ingredients_en.35.100.jpg"
         }
       }
-    }
+    },
+    "nutriscore_score": 13
   },
   {
     "_id": "8901725007652",
@@ -2100,7 +2106,8 @@
           "en": "https://images.openfoodfacts.org/images/products/890/172/500/7652/ingredients_en.7.100.jpg"
         }
       }
-    }
+    },
+    "nutriscore_score": 21
   },
   {
     "_id": "5449000053879",
@@ -2256,7 +2263,8 @@
           "fr": "https://images.openfoodfacts.org/images/products/544/900/005/3879/ingredients_fr.24.100.jpg"
         }
       }
-    }
+    },
+    "nutriscore_score": 1
   },
   {
     "_id": "8410376047578",
@@ -2611,7 +2619,8 @@
           "es": "https://images.openfoodfacts.org/images/products/841/037/604/7578/ingredients_es.9.100.jpg"
         }
       }
-    }
+    },
+    "nutriscore_score": 9
   },
   {
     "_id": "3168930164661",
@@ -2878,7 +2887,8 @@
           "fr": "https://images.openfoodfacts.org/images/products/316/893/016/4661/ingredients_fr.60.100.jpg"
         }
       }
-    }
+    },
+    "nutriscore_score": 9
   },
   {
     "_id": "0789742895050",
@@ -3026,6 +3036,7 @@
           "fr": "https://images.openfoodfacts.org/images/products/078/974/289/5050/ingredients_fr.6.100.jpg"
         }
       }
-    }
+    },
+    "nutriscore_score": 3
   }
 ]
