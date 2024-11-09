@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { useState } from 'react'
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import NutritionChart from "@/components/shared/NutritionChart"
 import { ArrowLeft, Heart, Share2, X, Check, Info } from "lucide-react"
 import {
   Tooltip,
@@ -31,7 +32,7 @@ type ProductData = {
 export default function ProductDetails({ product }: { product: ProductData }) {
   const [isFavorite, setIsFavorite] = useState(false)
 
-  const nutritionScore = product?.nutriscore_score || 0
+  const nutritionScore = product?.nutriscore_score || 9
   const maxScore = 100
 
   const nutritionPreferences = [
@@ -91,6 +92,13 @@ export default function ProductDetails({ product }: { product: ProductData }) {
         <Button variant="ghost" size="icon" aria-label="Go back">
           <ArrowLeft className="h-6 w-6" />
         </Button>
+        <div>
+              <h1 className="text-2xl font-semibold dark:text-white">
+                {product.product_name}
+              </h1>
+              <p className="text-gray-500 dark:text-gray-400">{product.brands}</p>
+             
+            </div>
         <div className="flex gap-2">
           <Button variant="ghost" size="icon" aria-label="Share product">
             <Share2 className="h-6 w-6" />
@@ -111,19 +119,11 @@ export default function ProductDetails({ product }: { product: ProductData }) {
         <div className="lg:w-1/2 p-4 lg:p-6 lg:border-r dark:border-gray-700">
           {/* Product Info */}
           <div className="flex gap-4 items-start">
-            <Image
-              src={product.image_url || "/placeholder.svg"}
-              alt={product.product_name}
-              width={150}
-              height={150}
-              className="rounded-lg object-cover"
-            />
-            <div>
-              <h1 className="text-2xl font-semibold dark:text-white">
-                {product.product_name}
-              </h1>
-              <p className="text-gray-500 dark:text-gray-400">{product.brands}</p>
-            </div>
+  
+          
+            <div className="mt-4">
+            <NutritionChart nutriments={product.nutriments} />
+          </div>
           </div>
 
           {/* Nutri-Score */}
