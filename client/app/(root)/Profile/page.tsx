@@ -18,6 +18,7 @@ import { Badge } from "@/components/ui/badge";
 export default function ProfileComponent() {
   const { user, error, isLoading } = useUser();
 
+  const fullName = `${user?.given_name || ""} ${user?.family_name || ""}`;
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -76,9 +77,7 @@ export default function ProfileComponent() {
               />
             </div>
             <div className="text-center">
-              <h2 className="text-xl font-semibold text-foreground">
-                {user.given_name} {user.family_name}
-              </h2>
+              <h2 className="text-xl font-semibold text-foreground"></h2>
               <p className="text-sm text-muted-foreground">@{user.nickname}</p>
             </div>
             <div className="flex items-center text-muted-foreground">
@@ -98,7 +97,7 @@ export default function ProfileComponent() {
             <div className="flex items-center text-sm text-muted-foreground">
               <Calendar className="w-4 h-4 mr-2" />
               <span>
-                Last updated: {new Date(user.updated_at).toLocaleString()}
+                Last updated: {new Date(user.updated_at || "").toLocaleString()}
               </span>
             </div>
             <Button asChild variant="outline" className="mt-4">

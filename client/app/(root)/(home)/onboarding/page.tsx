@@ -17,23 +17,42 @@ import {
   Leaf,
   Moon,
   UserCircle2,
-  Heart,
-  Bike,
   Utensils,
   Fish,
   Salad,
 } from "lucide-react";
+import { LucideIcon } from "lucide-react";
+
+interface Goal {
+  id: string;
+  label: string;
+  icon: LucideIcon;
+}
+
+interface DietType {
+  id: string;
+  label: string;
+  description: string;
+  icon: LucideIcon;
+}
+
+interface FormData {
+  name: string;
+  goals: string[];
+  otherGoals: string[];
+  dietType: string;
+}
 
 export default function Component() {
   const [step, setStep] = useState(1);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     name: "",
     goals: [],
     otherGoals: [],
     dietType: "",
   });
 
-  const goals = [
+  const goals: Goal[] = [
     { id: "be-healthy", label: "Be Healthy", icon: Shield },
     { id: "lose-weight", label: "Lose Weight", icon: Scale },
     { id: "log-foods", label: "Log Foods", icon: Calendar },
@@ -42,7 +61,7 @@ export default function Component() {
     { id: "analyze-recipes", label: "Analyze Recipes", icon: Calculator },
   ];
 
-  const otherGoals = [
+  const otherGoals: Goal[] = [
     { id: "boost-immunity", label: "Boost immunity", icon: Shield },
     { id: "mental-clarity", label: "Mental clarity", icon: Brain },
     { id: "reduce-stress", label: "Reduce stress", icon: Leaf },
@@ -50,7 +69,7 @@ export default function Component() {
     { id: "other", label: "Other", icon: UserCircle2 },
   ];
 
-  const dietTypes = [
+  const dietTypes: DietType[] = [
     {
       id: "classic",
       label: "Classic",
@@ -86,12 +105,15 @@ export default function Component() {
 
   const router = useRouter();
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleGoalToggle = (category, goalId) => {
+  const handleGoalToggle = (
+    category: "goals" | "otherGoals",
+    goalId: string
+  ) => {
     setFormData((prev) => {
       const array = prev[category];
       return {
@@ -103,7 +125,7 @@ export default function Component() {
     });
   };
 
-  const handleDietTypeSelect = (dietId) => {
+  const handleDietTypeSelect = (dietId: string) => {
     setFormData((prev) => ({ ...prev, dietType: dietId }));
   };
 
@@ -151,7 +173,13 @@ export default function Component() {
             </p>
             <div className="space-y-4">
               <div>
-                <Label htmlFor="name">Name</Label>
+                <Label
+                  htmlFor="name"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                >
+                  Name
+                </Label>
+
                 <Input
                   id="name"
                   name="name"

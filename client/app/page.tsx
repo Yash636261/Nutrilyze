@@ -10,8 +10,8 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const menuItems = [
   { name: "Product", href: "#" },
@@ -73,12 +73,12 @@ const page = () => {
 };
 
 const Header = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const { user, isLoading } = useUser()
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user, isLoading } = useUser();
 
   const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen)
-  }
+    setIsMenuOpen(!isMenuOpen);
+  };
 
   return (
     <header className="w-full bg-background">
@@ -93,7 +93,10 @@ const Header = () => {
           <ul className="inline-flex space-x-8">
             {menuItems.map((item) => (
               <li key={item.name}>
-                <Link href={item.href} className="text-sm font-semibold text-foreground hover:text-primary">
+                <Link
+                  href={item.href}
+                  className="text-sm font-semibold text-foreground hover:text-primary"
+                >
                   {item.name}
                 </Link>
               </li>
@@ -106,9 +109,18 @@ const Header = () => {
           ) : user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                <Button
+                  variant="ghost"
+                  className="relative h-8 w-8 rounded-full"
+                >
                   <Avatar className="h-8 w-8">
-                    <AvatarImage src={user.picture} alt={user.name} />
+                    <AvatarImage
+                      src={
+                        user.picture ||
+                        "https://res.cloudinary.com/dkawvablj/image/upload/v1725119468/Core/mwpxqnn5viel4zddmng7.jpg"
+                      }
+                      alt={user.name || "User's Image"}
+                    />
                     <AvatarFallback>{user.name?.charAt(0)}</AvatarFallback>
                   </Avatar>
                 </Button>
@@ -145,7 +157,9 @@ const Header = () => {
               <div className="px-5 pb-6 pt-5">
                 <div className="flex items-center justify-between">
                   <div className="inline-flex items-center space-x-2">
-                    <span className="text-xl font-bold text-primary">BeHealthy</span>
+                    <span className="text-xl font-bold text-primary">
+                      BeHealthy
+                    </span>
                   </div>
                   <div className="-mr-2">
                     <Button variant="ghost" size="icon" onClick={toggleMenu}>
@@ -168,17 +182,25 @@ const Header = () => {
                 </div>
                 <div className="mt-6">
                   {isLoading ? (
-                    <Button disabled className="w-full">Loading...</Button>
+                    <Button disabled className="w-full">
+                      Loading...
+                    </Button>
                   ) : user ? (
                     <div className="space-y-4">
                       <Button asChild variant="outline" className="w-full">
-                        <Link href="/profile" className="flex items-center justify-center">
+                        <Link
+                          href="/profile"
+                          className="flex items-center justify-center"
+                        >
                           <User className="mr-2 h-4 w-4" />
                           <span>Profile</span>
                         </Link>
                       </Button>
                       <Button asChild variant="destructive" className="w-full">
-                        <Link href="/api/auth/logout" className="flex items-center justify-center">
+                        <Link
+                          href="/api/auth/logout"
+                          className="flex items-center justify-center"
+                        >
                           <LogOut className="mr-2 h-4 w-4" />
                           <span>Log out</span>
                         </Link>
@@ -196,8 +218,7 @@ const Header = () => {
         )}
       </div>
     </header>
-  )
-}
-
+  );
+};
 
 export default page;
