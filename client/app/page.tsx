@@ -72,7 +72,7 @@ const page = () => {
                 <div className="mt-10 flex items-center gap-x-6">
                   {isLoading ? null : user ? (
                     <Link
-                      href="/onboarding"
+                      href="/scan"
                       className="group flex h-10 items-center justify-center rounded-md border border-orange-600 bg-gradient-to-b from-orange-400 via-orange-500 to-orange-600 px-4 text-neutral-50 shadow-[inset_0_1px_0px_0px_#fdba74] active:[box-shadow:none]"
                     >
                       <span className="block group-active:[transform:translate3d(0,1px,0)]">
@@ -142,7 +142,7 @@ const CTA = () => {
             <div className="mt-8 inline-flex items-center gap-2 sm:gap-3 lg:mt-8">
               {isLoading ? null : user ? (
                 <Link
-                  href="/onboarding"
+                  href="/scan"
                   className="group h-10 select-none rounded-lg bg-blue-600 px-4 text-sm leading-8 text-zinc-50 shadow-[0_-1px_0_1px_#1e3a8a_inset,0_0_0_1px_#1d4ed8_inset,0_0.5px_0_1.5px_#60a5fa_inset] hover:bg-blue-700 active:bg-blue-800 active:shadow-[-1px_0px_1px_0px_rgba(0,0,0,.2)_inset,1px_0px_1px_0px_rgba(0,0,0,.2)_inset,0px_0.125rem_0px_0px_rgba(0,0,0,.6)_inset]"
                 >
                   <span className="block group-active:[transform:translate3d(0,1px,0)]">
