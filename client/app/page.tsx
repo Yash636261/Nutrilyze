@@ -61,7 +61,8 @@ const page = () => {
   }, [user])
 
   if (isLoading || hasProfile === null) {
-    return null // or a loading spinner
+    
+    // return null // or a loading spinner
   }
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault()
