@@ -27,7 +27,7 @@ When summarizing, include links where applicable for users to explore detailed i
 You will given user data also  whivh you can use to give user some insights ,give answer in an insightful manner: This 
 
 {USER DATA}
-Name: Sarah L.
+Name: User.
 Age: 28
 Dietary Preferences: Vegan, gluten-free
 Health Goals: Weight management, improve gut health
