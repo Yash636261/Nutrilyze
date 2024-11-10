@@ -1,25 +1,30 @@
-'use client'
+"use client";
 
-import { Card } from "@/components/ui/card"
-import { Progress } from "@/components/ui/progress"
+import { Card } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
 
 interface NutrimentsProps {
   nutriments: {
-    carbohydrates: number
-    fat: number
-    proteins: number
-    energy: number
-    'energy-kcal': number
-    [key: string]: number
-  }
+    carbohydrates: number;
+    fat: number;
+    proteins: number;
+    energy: number;
+    "energy-kcal": number;
+    [key: string]: number;
+  };
 }
 
 export default function NutritionChart({ nutriments }: NutrimentsProps) {
+  console.warn("NutritionChart", nutriments);
+  console.warn(nutriments);
   // Calculate total macros for percentages
-  const totalMacros = nutriments.carbohydrates + nutriments.fat + nutriments.proteins
-  const fatPercentage = Math.round((nutriments.fat / totalMacros) * 100) || 0
-  const carbsPercentage = Math.round((nutriments.carbohydrates / totalMacros) * 100) || 0
-  const proteinPercentage = Math.round((nutriments.proteins / totalMacros) * 100) || 0
+  const totalMacros =
+    nutriments.carbohydrates + nutriments.fat + nutriments.proteins;
+  const fatPercentage = Math.round((nutriments.fat / totalMacros) * 100) || 0;
+  const carbsPercentage =
+    Math.round((nutriments.carbohydrates / totalMacros) * 100) || 0;
+  const proteinPercentage =
+    Math.round((nutriments.proteins / totalMacros) * 100) || 0;
 
   return (
     <Card className="p-6">
@@ -27,7 +32,9 @@ export default function NutritionChart({ nutriments }: NutrimentsProps) {
         {/* Calories Circle */}
         <div className="relative w-48 h-48 mx-auto">
           <div className="absolute inset-0 flex items-center justify-center flex-col">
-            <span className="text-3xl font-bold">{nutriments['energy-kcal']}</span>
+            <span className="text-3xl font-bold">
+              {nutriments["energy-kcal"]}
+            </span>
             <span className="text-sm text-muted-foreground">Calories</span>
           </div>
           <svg className="w-full h-full transform -rotate-90">
@@ -38,9 +45,11 @@ export default function NutritionChart({ nutriments }: NutrimentsProps) {
               className="stroke-current stroke-[8]"
               fill="none"
               strokeLinecap="round"
-              strokeDasharray={`${(proteinPercentage * 5.52)} ${552 - (proteinPercentage * 5.52)}`}
+              strokeDasharray={`${proteinPercentage * 5.52} ${
+                552 - proteinPercentage * 5.52
+              }`}
               strokeDashoffset="138"
-              style={{ stroke: 'rgb(34, 197, 94)' }}
+              style={{ stroke: "rgb(34, 197, 94)" }}
             />
             <circle
               cx="96"
@@ -49,9 +58,11 @@ export default function NutritionChart({ nutriments }: NutrimentsProps) {
               className="stroke-current stroke-[8]"
               fill="none"
               strokeLinecap="round"
-              strokeDasharray={`${(carbsPercentage * 5.52)} ${552 - (carbsPercentage * 5.52)}`}
-              strokeDashoffset={552 - (proteinPercentage * 5.52) + 138}
-              style={{ stroke: 'rgb(251, 146, 60)' }}
+              strokeDasharray={`${carbsPercentage * 5.52} ${
+                552 - carbsPercentage * 5.52
+              }`}
+              strokeDashoffset={552 - proteinPercentage * 5.52 + 138}
+              style={{ stroke: "rgb(251, 146, 60)" }}
             />
             <circle
               cx="96"
@@ -60,9 +71,13 @@ export default function NutritionChart({ nutriments }: NutrimentsProps) {
               className="stroke-current stroke-[8]"
               fill="none"
               strokeLinecap="round"
-              strokeDasharray={`${(fatPercentage * 5.52)} ${552 - (fatPercentage * 5.52)}`}
-              strokeDashoffset={552 - ((proteinPercentage + carbsPercentage) * 5.52) + 138}
-              style={{ stroke: 'rgb(239, 68, 68)' }}
+              strokeDasharray={`${fatPercentage * 5.52} ${
+                552 - fatPercentage * 5.52
+              }`}
+              strokeDashoffset={
+                552 - (proteinPercentage + carbsPercentage) * 5.52 + 138
+              }
+              style={{ stroke: "rgb(239, 68, 68)" }}
             />
           </svg>
         </div>
@@ -100,5 +115,5 @@ export default function NutritionChart({ nutriments }: NutrimentsProps) {
         </div>
       </div>
     </Card>
-  )
+  );
 }

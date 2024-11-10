@@ -1,81 +1,122 @@
-'use client'
+"use client";
 
-import Image from 'next/image'
-import { useState } from 'react'
-import { Card } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import NutritionChart from "@/components/shared/NutritionChart"
-import { ArrowLeft, Heart, Share2, X, Check, Info } from "lucide-react"
+import Image from "next/image";
+import { useState } from "react";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import NutritionChart from "@/components/shared/NutritionChart";
+import { ArrowLeft, Heart, Share2, X, Check, Info } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip"
+} from "@/components/ui/tooltip";
 
 type ProductData = {
-  product_name: string
-  brands: string
-  image_url: string
-  nutriscore_grade: string
-  nutriscore_score: number
-  nutrient_levels: {
-    fat: string
-    'saturated-fat': string
-    sugars: string
-    salt: string
-  }
-  ingredients_analysis_tags: string[]
-  allergens_tags: string[]
-}
+  productName: string;
+  brand: string;
+  image_url: string;
+  nutriscore_grade: string;
+  nutriscore_score: number;
+  nutrientLevels: {
+    fat: string;
+    "saturated-fat": string;
+    sugars: string;
+    salt: string;
+  };
+  nutriments: any;
+  ingredientsAnalysisTags: string[];
+  allergensTags: string[];
+  nutriscoreScore: number;
+  nutriscoreGrade: string;
+};
 
 export default function ProductDetails({ product }: { product: ProductData }) {
-  const [isFavorite, setIsFavorite] = useState(false)
+  console.log("Vinayak", product);
 
-  const nutritionScore = product?.nutriscore_score || 9
-  const maxScore = 100
+  const [isFavorite, setIsFavorite] = useState(false);
+
+  const nutritionScore = product?.nutriscoreScore || 9;
+  const maxScore = 100;
 
   const nutritionPreferences = [
-    { id: "vegan", label: "Vegan", allowed: product.ingredients_analysis_tags?.includes('en:vegan'), icon: "🌱" },
-    { id: "vegetarian", label: "Vegetarian", allowed: product.ingredients_analysis_tags?.includes('en:vegetarian'), icon: "🥬" },
-    { id: "gluten-free", label: "Gluten-Free", allowed: !product.allergens_tags?.includes('en:gluten'), icon: "🌾" },
-    { id: "lactose-free", label: "Free of Lactose", allowed: !product.allergens_tags?.includes('en:milk'), icon: "🥛" },
-  ]
+    {
+      id: "vegan",
+      label: "Vegan",
+      allowed: product.ingredientsAnalysisTags?.includes("en:vegan"),
+      icon: "🌱",
+    },
+    {
+      id: "vegetarian",
+      label: "Vegetarian",
+      allowed: product.ingredientsAnalysisTags?.includes("en:vegetarian"),
+      icon: "🥬",
+    },
+    {
+      id: "gluten-free",
+      label: "Gluten-Free",
+      allowed: !product.allergensTags?.includes("en:gluten"),
+      icon: "🌾",
+    },
+    {
+      id: "lactose-free",
+      label: "Free of Lactose",
+      allowed: !product.allergensTags?.includes("en:milk"),
+      icon: "🥛",
+    },
+  ];
 
   const nutritionLevels = [
     {
       id: "fat",
       label: "Fat",
-      level: product.nutrient_levels?.fat || "Unknown",
+      level: product.nutrientLevels?.fat || "Unknown",
       icon: "🔥",
-      color: product.nutrient_levels?.fat === "low" ? "bg-green-500" : 
-             product.nutrient_levels?.fat === "moderate" ? "bg-yellow-500" : "bg-red-500",
+      color:
+        product.nutrientLevels?.fat === "low"
+          ? "bg-green-500"
+          : product.nutrientLevels?.fat === "moderate"
+          ? "bg-yellow-500"
+          : "bg-red-500",
     },
     {
       id: "saturated-fat",
       label: "Saturated Fat",
-      level: product.nutrient_levels?.["saturated-fat"] || "Unknown",
+      level: product.nutrientLevels?.["saturated-fat"] || "Unknown",
       icon: "💧",
-      color: product.nutrient_levels?.["saturated-fat"] === "low" ? "bg-green-500" : 
-             product.nutrient_levels?.["saturated-fat"] === "moderate" ? "bg-yellow-500" : "bg-red-500",
+      color:
+        product.nutrientLevels?.["saturated-fat"] === "low"
+          ? "bg-green-500"
+          : product.nutrientLevels?.["saturated-fat"] === "moderate"
+          ? "bg-yellow-500"
+          : "bg-red-500",
     },
     {
       id: "sugar",
       label: "Sugar",
-      level: product.nutrient_levels?.sugars || "Unknown",
+      level: product.nutrientLevels?.sugars || "Unknown",
       icon: "🍯",
-      color: product.nutrient_levels?.sugars === "low" ? "bg-green-500" : 
-             product.nutrient_levels?.sugars === "moderate" ? "bg-yellow-500" : "bg-red-500",
+      color:
+        product.nutrientLevels?.sugars === "low"
+          ? "bg-green-500"
+          : product.nutrientLevels?.sugars === "moderate"
+          ? "bg-yellow-500"
+          : "bg-red-500",
     },
     {
       id: "salt",
       label: "Salt",
-      level: product.nutrient_levels?.salt || "Unknown",
+      level: product.nutrientLevels?.salt || "Unknown",
       icon: "🧂",
-      color: product.nutrient_levels?.salt === "low" ? "bg-green-500" : 
-             product.nutrient_levels?.salt === "moderate" ? "bg-yellow-500" : "bg-red-500",
+      color:
+        product.nutrientLevels?.salt === "low"
+          ? "bg-green-500"
+          : product.nutrientLevels?.salt === "moderate"
+          ? "bg-yellow-500"
+          : "bg-red-500",
     },
-  ]
+  ];
 
   const nutriScoreColors = {
     a: "bg-green-500",
@@ -83,7 +124,7 @@ export default function ProductDetails({ product }: { product: ProductData }) {
     c: "bg-yellow-500",
     d: "bg-orange-500",
     e: "bg-red-500",
-  }
+  };
 
   return (
     <div className="bg-white dark:bg-gray-800 overflow-hidden rounded-lg shadow-lg">
@@ -93,23 +134,28 @@ export default function ProductDetails({ product }: { product: ProductData }) {
           <ArrowLeft className="h-6 w-6" />
         </Button>
         <div>
-              <h1 className="text-2xl font-semibold dark:text-white">
-                {product.product_name}
-              </h1>
-              <p className="text-gray-500 dark:text-gray-400">{product.brands}</p>
-             
-            </div>
+          <h1 className="text-2xl font-semibold dark:text-white">
+            {product.productName}
+          </h1>
+          <p className="text-gray-500 dark:text-gray-400">{product.brand}</p>
+        </div>
         <div className="flex gap-2">
           <Button variant="ghost" size="icon" aria-label="Share product">
             <Share2 className="h-6 w-6" />
           </Button>
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label={
+              isFavorite ? "Remove from favorites" : "Add to favorites"
+            }
             onClick={() => setIsFavorite(!isFavorite)}
           >
-            <Heart className={`h-6 w-6 ${isFavorite ? 'fill-red-500 text-red-500' : ''}`} />
+            <Heart
+              className={`h-6 w-6 ${
+                isFavorite ? "fill-red-500 text-red-500" : ""
+              }`}
+            />
           </Button>
         </div>
       </div>
@@ -119,11 +165,9 @@ export default function ProductDetails({ product }: { product: ProductData }) {
         <div className="lg:w-1/2 p-4 lg:p-6 lg:border-r dark:border-gray-700">
           {/* Product Info */}
           <div className="flex gap-4 items-start">
-  
-          
             <div className="mt-4">
-            <NutritionChart nutriments={product.nutriments} />
-          </div>
+              <NutritionChart nutriments={product.nutriments} />
+            </div>
           </div>
 
           {/* Nutri-Score */}
@@ -132,11 +176,15 @@ export default function ProductDetails({ product }: { product: ProductData }) {
               NUTRI-SCORE
             </p>
             <div className="flex gap-1">
-              {(["a", "b", "c", "d", "e"] as Array<keyof typeof nutriScoreColors>).map((grade) => (
+              {(
+                ["a", "b", "c", "d", "e"] as Array<
+                  keyof typeof nutriScoreColors
+                >
+              ).map((grade) => (
                 <div
                   key={grade}
                   className={`flex-1 h-10 rounded-md flex items-center justify-center text-white font-bold ${
-                    grade === product.nutriscore_grade
+                    grade === product.nutriscoreGrade
                       ? nutriScoreColors[grade]
                       : "bg-gray-200 dark:bg-gray-700"
                   }`}
@@ -167,9 +215,7 @@ export default function ProductDetails({ product }: { product: ProductData }) {
                   fill="none"
                   stroke="#22c55e"
                   strokeWidth="3"
-                  strokeDasharray={`${
-                    (nutritionScore / maxScore) * 100
-                  }, 100`}
+                  strokeDasharray={`${(nutritionScore / maxScore) * 100}, 100`}
                   className="rotate-90 origin-center"
                 />
                 <text
@@ -190,10 +236,7 @@ export default function ProductDetails({ product }: { product: ProductData }) {
               <p className="text-gray-500 dark:text-gray-400 mt-2">
                 This score helps you to estimate the product quality
               </p>
-              <Button
-                variant="link"
-                className="p-0 h-auto text-green-500 mt-2"
-              >
+              <Button variant="link" className="p-0 h-auto text-green-500 mt-2">
                 Show more
               </Button>
             </div>
@@ -214,15 +257,23 @@ export default function ProductDetails({ product }: { product: ProductData }) {
                   className="p-4 flex items-center justify-between"
                 >
                   <div className="flex items-center gap-3">
-                    <span className="text-2xl" aria-hidden="true">{pref.icon}</span>
+                    <span className="text-2xl" aria-hidden="true">
+                      {pref.icon}
+                    </span>
                     <span className="font-medium dark:text-gray-200">
                       {pref.label}
                     </span>
                   </div>
                   {pref.allowed ? (
-                    <Check className="h-6 w-6 text-green-500" aria-label={`${pref.label} allowed`} />
+                    <Check
+                      className="h-6 w-6 text-green-500"
+                      aria-label={`${pref.label} allowed`}
+                    />
                   ) : (
-                    <X className="h-6 w-6 text-red-500" aria-label={`${pref.label} not allowed`} />
+                    <X
+                      className="h-6 w-6 text-red-500"
+                      aria-label={`${pref.label} not allowed`}
+                    />
                   )}
                 </Card>
               ))}
@@ -241,7 +292,9 @@ export default function ProductDetails({ product }: { product: ProductData }) {
                   className="p-4 flex items-center justify-between"
                 >
                   <div className="flex items-center gap-3">
-                    <span className="text-2xl" aria-hidden="true">{level.icon}</span>
+                    <span className="text-2xl" aria-hidden="true">
+                      {level.icon}
+                    </span>
                     <span className="font-medium dark:text-gray-200">
                       {level.label}
                     </span>
@@ -250,7 +303,10 @@ export default function ProductDetails({ product }: { product: ProductData }) {
                     <span className="text-gray-600 dark:text-gray-300">
                       {level.level}
                     </span>
-                    <div className={`w-4 h-4 rounded-full ${level.color}`} aria-hidden="true" />
+                    <div
+                      className={`w-4 h-4 rounded-full ${level.color}`}
+                      aria-hidden="true"
+                    />
                   </div>
                 </Card>
               ))}
@@ -277,5 +333,5 @@ export default function ProductDetails({ product }: { product: ProductData }) {
         </div>
       </div>
     </div>
-  )
+  );
 }
