@@ -1,11 +1,12 @@
 "use client";
 
-import Image from "next/image";
-import { useState } from "react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import NutritionChart from "@/components/shared/NutritionChart";
-import { ArrowLeft, Heart, Share2, X, Check, Info } from "lucide-react";
+import Image from 'next/image'
+import Insights from './Insights'
+import { useState } from 'react'
+import { Card } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import NutritionChart from "@/components/shared/NutritionChart"
+import { ArrowLeft, Heart, Share2, X, Check, Info } from "lucide-react"
 import {
   Tooltip,
   TooltipContent,
@@ -166,7 +167,12 @@ export default function ProductDetails({ product }: { product: ProductData }) {
           {/* Product Info */}
           <div className="flex gap-4 items-start">
             <div className="mt-4">
-              <NutritionChart nutriments={product.nutriments} />
+            <NutritionChart nutriments={product.nutriments} />
+          </div>
+          <div>
+              <h2 className="text-xl font-semibold mb-4 dark:text-white">Nutritional Insights</h2>
+              <Insights product={product} />
+             
             </div>
           </div>
 
