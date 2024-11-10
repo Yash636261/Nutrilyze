@@ -24,16 +24,15 @@ const menuItems = [
 ];
 
 import { useEffect } from "react";
-import localForage from 'localforage'
+import localForage from "localforage";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 const images = ["/Images/img5.jpg", "/Images/img2.jpg", "/Images/img7.jpg"];
 
 const page = () => {
   const { user, isLoading } = useUser();
-  const [hasProfile, setHasProfile] = useState<boolean | null>(null)
+  const [hasProfile, setHasProfile] = useState<boolean | null>(null);
   const router = useRouter();
-
 
   const [currentImage, setCurrentImage] = useState(0);
 
@@ -47,37 +46,36 @@ const page = () => {
   useEffect(() => {
     async function checkUserProfile() {
       try {
-        const userProfileData = await localForage.getItem('userProfileData')
-        setHasProfile(!!userProfileData)
+        const userProfileData = await localForage.getItem("userProfileData");
+        setHasProfile(!!userProfileData);
       } catch (error) {
-        console.error('Error checking user profile:', error)
-        setHasProfile(false)
+        console.error("Error checking user profile:", error);
+        setHasProfile(false);
       }
     }
 
     if (user) {
-      checkUserProfile()
+      checkUserProfile();
     }
-  }, [user])
+  }, [user]);
 
   if (isLoading || hasProfile === null) {
-    return null // or a loading spinner
+    return null; // or a loading spinner
   }
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault()
+    e.preventDefault();
     if (user) {
       if (hasProfile) {
-        router.push('/scan')
+        router.push("/scan");
       } else {
-        router.push('/onboarding')
+        router.push("/onboarding");
       }
     } else {
-      router.push('/api/auth/login')
+      router.push("/api/auth/login");
     }
-  }
+  };
   return (
     <div>
-      <Header />
       <div className="relative isolate pt-14 sm:px-6 lg:px-8">
         <div className="absolute left-1/2 top-1/2 -z-50 h-32 w-[100px] -translate-x-1/2 -translate-y-1/2 rounded-3xl bg-gradient-to-br from-orange-600 to-yellow-600 opacity-80 blur-[200px] md:w-[600px]" />
         <div className="mx-auto max-w-7xl py-32 sm:py-48 lg:py-56">
@@ -105,15 +103,21 @@ const page = () => {
                   are suitable for you, considering your diseases.
                 </p>
                 <div className="mt-10 flex items-center gap-x-6">
-                <Link
-      href={user ? (hasProfile ? "/scan" : "/onboarding") : "/api/auth/login"}
-      onClick={handleClick}
-      className="group flex h-10 items-center justify-center rounded-md border border-orange-600 bg-gradient-to-b from-orange-400 via-orange-500 to-orange-600 px-4 text-neutral-50 shadow-[inset_0_1px_0px_0px_#fdba74] active:[box-shadow:none]"
-    >
-      <span className="block group-active:[transform:translate3d(0,1px,0)]">
-        Get started
-      </span>
-    </Link>
+                  <Link
+                    href={
+                      user
+                        ? hasProfile
+                          ? "/scan"
+                          : "/onboarding"
+                        : "/api/auth/login"
+                    }
+                    onClick={handleClick}
+                    className="group flex h-10 items-center justify-center rounded-md border border-orange-600 bg-gradient-to-b from-orange-400 via-orange-500 to-orange-600 px-4 text-neutral-50 shadow-[inset_0_1px_0px_0px_#fdba74] active:[box-shadow:none]"
+                  >
+                    <span className="block group-active:[transform:translate3d(0,1px,0)]">
+                      Get started
+                    </span>
+                  </Link>
 
                   <a
                     href="/api/auth/login"
@@ -189,140 +193,6 @@ const CTA = () => {
         </div>
       </div>
     </section>
-  );
-};
-
-const Header = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { user, isLoading } = useUser();
-
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
-
-  return (
-    <header className="w-full bg-background">
-      <div className="mx-auto flex max-w-7xl items-center justify-between py-4 px-4 sm:px-6 lg:px-8">
-        <div className="inline-flex items-center space-x-2">
-          <Link href="/" className="text-xl font-bold text-primary">
-            <span>Be</span>
-            <span className="text-orange-500">Healthy</span>
-          </Link>
-        </div>
-
-        <div className="hidden lg:block">
-          {isLoading ? null : user ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  className="relative h-8 w-8 rounded-full border"
-                >
-                  <Avatar className="h-8 w-8">
-                    <AvatarImage
-                      src={
-                        user.picture ||
-                        "https://res.cloudinary.com/dkawvablj/image/upload/v1725119468/Core/mwpxqnn5viel4zddmng7.jpg"
-                      }
-                      alt={user.name || "User's Image"}
-                    />
-                    <AvatarFallback>{user.name?.charAt(0)}</AvatarFallback>
-                  </Avatar>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem asChild>
-                  <Link href="/Profile" className="flex items-center">
-                    <User className="mr-2 h-4 w-4" />
-                    <span>Profile</span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/api/auth/logout" className="flex items-center">
-                    <LogOut className="mr-2 h-4 w-4" />
-                    <span>Log out</span>
-                  </Link>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          ) : (
-            <Button asChild>
-              <Link href="/api/auth/login">Log in</Link>
-            </Button>
-          )}
-        </div>
-        <div className="lg:hidden">
-          <Button variant="ghost" size="icon" onClick={toggleMenu}>
-            <Menu className="h-6 w-6" />
-          </Button>
-        </div>
-        {isMenuOpen && (
-          <div className="absolute inset-x-0 top-0 z-50 origin-top-right transition lg:hidden">
-            <div className="divide-y-2 divide-gray-50 rounded-lg bg-background shadow-lg ring-1 ring-black/5">
-              <div className="px-5 pb-6 pt-5">
-                <div className="flex items-center justify-between">
-                  <div className="inline-flex items-center space-x-2">
-                    <span className="text-xl font-bold text-primary">
-                      Nutrilyze
-                    </span>
-                  </div>
-                  <div className="-mr-2">
-                    <Button variant="ghost" size="icon" onClick={toggleMenu}>
-                      <X className="h-6 w-6" />
-                    </Button>
-                  </div>
-                </div>
-                <div className="mt-6">
-                  <nav className="grid gap-y-4">
-                    {menuItems.map((item) => (
-                      <Link
-                        key={item.name}
-                        href={item.href}
-                        className="flex items-center rounded-md p-3 text-sm font-semibold text-foreground hover:bg-muted"
-                      >
-                        {item.name}
-                      </Link>
-                    ))}
-                  </nav>
-                </div>
-                <div className="mt-6">
-                  {isLoading ? (
-                    <Button disabled className="w-full">
-                      Loading...
-                    </Button>
-                  ) : user ? (
-                    <div className="space-y-4">
-                      <Button asChild variant="outline" className="w-full">
-                        <Link
-                          href="/profile"
-                          className="flex items-center justify-center"
-                        >
-                          <User className="mr-2 h-4 w-4" />
-                          <span>Profile</span>
-                        </Link>
-                      </Button>
-                      <Button asChild variant="destructive" className="w-full">
-                        <Link
-                          href="/api/auth/logout"
-                          className="flex items-center justify-center"
-                        >
-                          <LogOut className="mr-2 h-4 w-4" />
-                          <span>Log out</span>
-                        </Link>
-                      </Button>
-                    </div>
-                  ) : (
-                    <Button asChild className="w-full">
-                      <Link href="/api/auth/login">Log in</Link>
-                    </Button>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-    </header>
   );
 };
 
