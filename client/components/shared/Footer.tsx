@@ -15,10 +15,7 @@ const Footer = () => {
         <div className="flex flex-col items-center justify-between space-y-2 sm:flex-row sm:space-y-0">
           <Link href="/" className="block max-w-fit">
             <div className="inline-flex items-center space-x-2">
-              <p className="text-base">
-                <span className=" text-blue-500">Be</span>
-                Healthy
-              </p>
+              <p className="text-base">Nutrilyze</p>
             </div>
           </Link>
           <ul className="mb-2 flex flex-wrap items-center font-medium sm:mb-0">
@@ -38,7 +35,7 @@ const Footer = () => {
         </div>
         <hr className="border-[#E4E4E7] dark:border-[#27272A]" />
         <p className="text-center text-sm leading-5 text-gray-600 dark:text-gray-300">
-          © {new Date().getFullYear()} BeHealthy consultancy, Inc.
+          © {new Date().getFullYear()} Nutrilyze consultancy, Inc.
         </p>
       </div>
     </footer>

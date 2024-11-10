@@ -23,63 +23,97 @@ const menuItems = [
   { name: "Company", href: "#" },
 ];
 
+import { useEffect } from "react";
+import Image from "next/image";
+const images = ["/Images/img5.jpg", "/Images/img2.jpg", "/Images/img7.jpg"];
+
 const page = () => {
   const { user, isLoading } = useUser();
+
+  const [currentImage, setCurrentImage] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentImage((prevImage) => (prevImage + 1) % images.length);
+    }, 5000); // Change image every 5 seconds
+
+    return () => clearInterval(timer);
+  }, []);
 
   return (
     <div>
       <Header />
       <div className="relative isolate pt-14 sm:px-6 lg:px-8">
         <div className="absolute left-1/2 top-1/2 -z-50 h-32 w-[100px] -translate-x-1/2 -translate-y-1/2 rounded-3xl bg-gradient-to-br from-orange-600 to-yellow-600 opacity-80 blur-[200px] md:w-[600px]" />
-        <div className="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
-          <div className="hidden sm:mb-8 sm:flex sm:justify-center">
-            <div className="relative rounded-full px-3 py-1 text-sm leading-6 text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20 dark:text-gray-300 dark:ring-gray-300/10 dark:hover:ring-gray-300/20">
-              We are excited to share our latest updates.{" "}
-              <a
-                href="#"
-                className="font-semibold text-orange-600 dark:text-orange-400"
-              >
-                <span aria-hidden="true" className="absolute inset-0" />
-                Read more <span aria-hidden="true">&rarr;</span>
-              </a>
-            </div>
-          </div>
-          <div className="text-center">
-            <h1 className="text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-6xl">
-              Welcome to BeHealthy
-            </h1>
-            <p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300">
-              BeHealthy is a project that provides you with a guide to stay
-              healthy by scanning your products and determining whether they are
-              suitable for you, considering your diseases.
-            </p>
-            <div className="mt-10 flex items-center justify-center gap-x-6">
-              {isLoading ? null : user ? (
-                <Link
-                  href="/onboarding"
-                  className="group flex h-10 items-center justify-center rounded-md border border-orange-600 bg-gradient-to-b from-orange-400 via-orange-500 to-orange-600 px-4 text-neutral-50 shadow-[inset_0_1px_0px_0px_#fdba74] active:[box-shadow:none]"
-                >
-                  <span className="block group-active:[transform:translate3d(0,1px,0)]">
-                    Get started
-                  </span>
-                </Link>
-              ) : (
-                <Link
-                  href="/api/auth/login"
-                  className="group flex h-10 items-center justify-center rounded-md border border-orange-600 bg-gradient-to-b from-orange-400 via-orange-500 to-orange-600 px-4 text-neutral-50 shadow-[inset_0_1px_0px_0px_#fdba74] active:[box-shadow:none]"
-                >
-                  <span className="block group-active:[transform:translate3d(0,1px,0)]">
-                    Get started
-                  </span>
-                </Link>
-              )}
+        <div className="mx-auto max-w-7xl py-32 sm:py-48 lg:py-56">
+          <div className="flex flex-col lg:flex-row items-center justify-between">
+            <div className="lg:w-1/2 lg:pr-8">
+              <div className="hidden sm:mb-8 sm:flex">
+                <div className="relative rounded-full px-3 py-1 text-sm leading-6 text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20 dark:text-gray-300 dark:ring-gray-300/10 dark:hover:ring-gray-300/20">
+                  We are excited to share our latest updates.{" "}
+                  <a
+                    href="#"
+                    className="font-semibold text-orange-600 dark:text-orange-400"
+                  >
+                    <span aria-hidden="true" className="absolute inset-0" />
+                    Read more <span aria-hidden="true">&rarr;</span>
+                  </a>
+                </div>
+              </div>
+              <div className="text-left">
+                <h1 className="text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-6xl">
+                  Welcome to Nutrilyze
+                </h1>
+                <p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300">
+                  Nutrilyze is a project that provides you with a guide to stay
+                  healthy by scanning your products and determining whether they
+                  are suitable for you, considering your diseases.
+                </p>
+                <div className="mt-10 flex items-center gap-x-6">
+                  {isLoading ? null : user ? (
+                    <Link
+                      href="/onboarding"
+                      className="group flex h-10 items-center justify-center rounded-md border border-orange-600 bg-gradient-to-b from-orange-400 via-orange-500 to-orange-600 px-4 text-neutral-50 shadow-[inset_0_1px_0px_0px_#fdba74] active:[box-shadow:none]"
+                    >
+                      <span className="block group-active:[transform:translate3d(0,1px,0)]">
+                        Get started
+                      </span>
+                    </Link>
+                  ) : (
+                    <Link
+                      href="/api/auth/login"
+                      className="group flex h-10 items-center justify-center rounded-md border border-orange-600 bg-gradient-to-b from-orange-400 via-orange-500 to-orange-600 px-4 text-neutral-50 shadow-[inset_0_1px_0px_0px_#fdba74] active:[box-shadow:none]"
+                    >
+                      <span className="block group-active:[transform:translate3d(0,1px,0)]">
+                        Get started
+                      </span>
+                    </Link>
+                  )}
 
-              <a
-                href="/api/auth/login"
-                className="text-sm font-semibold leading-6 text-gray-900 dark:text-gray-300"
-              >
-                Learn more <span aria-hidden="true"> → </span>
-              </a>
+                  <a
+                    href="/api/auth/login"
+                    className="text-sm font-semibold leading-6 text-gray-900 dark:text-gray-300"
+                  >
+                    Learn more <span aria-hidden="true"> → </span>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div className="lg:w-1/2 mt-10 lg:mt-0">
+              <div className="relative w-full h-[400px] sm:h-[500px] rounded-lg overflow-hidden">
+                {images.map((src, index) => (
+                  <Image
+                    key={src}
+                    src={src}
+                    alt={`Product ${index + 1}`}
+                    fill
+                    className={`object-cover transition-opacity duration-1000 ${
+                      index === currentImage ? "opacity-100" : "opacity-0"
+                    }`}
+                    priority={index === 0}
+                  />
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -204,7 +238,7 @@ const Header = () => {
                 <div className="flex items-center justify-between">
                   <div className="inline-flex items-center space-x-2">
                     <span className="text-xl font-bold text-primary">
-                      BeHealthy
+                      Nutrilyze
                     </span>
                   </div>
                   <div className="-mr-2">

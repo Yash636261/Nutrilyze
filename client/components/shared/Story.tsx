@@ -33,7 +33,7 @@ export default function Story() {
       content:
         "With the rise of chronic diseases and dietary restrictions, there's an urgent need for a tool that helps people navigate the complex world of food and nutrition.",
       icon: Lightbulb,
-      image: "/Images/img2.png",
+      image: "/Images/img6.png",
       stats: [
         { value: "415M", label: "people with diabetes worldwide" },
         {

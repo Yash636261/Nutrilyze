@@ -156,7 +156,7 @@ export default function Component() {
       setStep((prev) => prev + 1);
     } else {
       console.log("Onboarding complete!", formData);
-      router.push("/dashboard");
+      router.push("/scan");
     }
   };
 
