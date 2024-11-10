@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Menu, X, User, LogOut } from "lucide-react";
+import { Menu, X, User, LogOut, Scan } from "lucide-react";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -24,16 +24,15 @@ const menuItems = [
 ];
 
 import { useEffect } from "react";
-import localForage from 'localforage'
+import localForage from "localforage";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-const images = ["/Images/img5.jpg", "/Images/img2.jpg", "/Images/img7.jpg"];
+const images = ["/Images/img5.jpg", "/Images/img7.jpg"];
 
 const page = () => {
   const { user, isLoading } = useUser();
-  const [hasProfile, setHasProfile] = useState<boolean | null>(null)
+  const [hasProfile, setHasProfile] = useState<boolean | null>(null);
   const router = useRouter();
-
 
   const [currentImage, setCurrentImage] = useState(0);
 
@@ -47,35 +46,34 @@ const page = () => {
   useEffect(() => {
     async function checkUserProfile() {
       try {
-        const userProfileData = await localForage.getItem('userProfileData')
-        setHasProfile(!!userProfileData)
+        const userProfileData = await localForage.getItem("userProfileData");
+        setHasProfile(!!userProfileData);
       } catch (error) {
-        console.error('Error checking user profile:', error)
-        setHasProfile(false)
+        console.error("Error checking user profile:", error);
+        setHasProfile(false);
       }
     }
 
     if (user) {
-      checkUserProfile()
+      checkUserProfile();
     }
-  }, [user])
+  }, [user]);
 
   if (isLoading || hasProfile === null) {
-    
     // return null // or a loading spinner
   }
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault()
+    e.preventDefault();
     if (user) {
       if (hasProfile) {
-        router.push('/scan')
+        router.push("/scan");
       } else {
-        router.push('/onboarding')
+        router.push("/onboarding");
       }
     } else {
-      router.push('/api/auth/login')
+      router.push("/api/auth/login");
     }
-  }
+  };
   return (
     <div>
       <Header />
@@ -106,22 +104,43 @@ const page = () => {
                   are suitable for you, considering your diseases.
                 </p>
                 <div className="mt-10 flex items-center gap-x-6">
-                <Link
-      href={user ? (hasProfile ? "/scan" : "/onboarding") : "/api/auth/login"}
-      onClick={handleClick}
-      className="group flex h-10 items-center justify-center rounded-md border border-orange-600 bg-gradient-to-b from-orange-400 via-orange-500 to-orange-600 px-4 text-neutral-50 shadow-[inset_0_1px_0px_0px_#fdba74] active:[box-shadow:none]"
-    >
-      <span className="block group-active:[transform:translate3d(0,1px,0)]">
-        Get started
-      </span>
-    </Link>
-
-                  <a
-                    href="/api/auth/login"
-                    className="text-sm font-semibold leading-6 text-gray-900 dark:text-gray-300"
+                  <Link
+                    href={
+                      user
+                        ? hasProfile
+                          ? "/scan"
+                          : "/onboarding"
+                        : "/api/auth/login"
+                    }
+                    onClick={handleClick}
+                    className="group flex h-10 items-center justify-center rounded-md border border-orange-600 bg-gradient-to-b from-orange-400 via-orange-500 to-orange-600 px-4 text-neutral-50 shadow-[inset_0_1px_0px_0px_#fdba74] active:[box-shadow:none]"
                   >
-                    Learn more <span aria-hidden="true"> → </span>
-                  </a>
+                    <span className="block group-active:[transform:translate3d(0,1px,0)]">
+                      Get started
+                    </span>
+                  </Link>
+                  <button className="bg-blue-400 rounded-md h-10 px-4">
+                    <Link href="/scan" className="flex gap-1">
+                      <svg
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="#000000"
+                        className="h-6 w-6"
+                      >
+                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                        <g
+                          id="SVGRepo_tracerCarrier"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        ></g>
+                        <g id="SVGRepo_iconCarrier">
+                          <path d="M23 4.5V8h-1V4.5A1.502 1.502 0 0 0 20.5 3H17V2h3.5A2.503 2.503 0 0 1 23 4.5zM4.5 22A1.502 1.502 0 0 1 3 20.5V17H2v3.5A2.503 2.503 0 0 0 4.5 23H8v-1zM22 20.5a1.502 1.502 0 0 1-1.5 1.5H17v1h3.5a2.503 2.503 0 0 0 2.5-2.5V17h-1zM3 4.5A1.502 1.502 0 0 1 4.5 3H8V2H4.5A2.503 2.503 0 0 0 2 4.5V8h1zM10 19V6H9v13zM6 6v13h2V6zm8 13V6h-2v13zm3-13v13h2V6zm-2 0v13h1V6z"></path>
+                          <path fill="none" d="M0 0h24v24H0z"></path>
+                        </g>
+                      </svg>
+                      <span>Scan Your Product </span>
+                    </Link>
+                  </button>
                 </div>
               </div>
             </div>
