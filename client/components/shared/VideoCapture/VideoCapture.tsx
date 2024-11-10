@@ -4,10 +4,11 @@ import { CameraEnhancer, CameraView } from "dynamsoft-camera-enhancer";
 import { CaptureVisionRouter } from "dynamsoft-capture-vision-router";
 import { MultiFrameResultCrossFilter } from "dynamsoft-utility";
 import "./VideoCapture.css";
-
+import { useRouter } from 'next/navigation'
 const componentDestroyedErrorMsg = "VideoCapture Component Destroyed";
 
 function VideoCapture() {
+  const router = useRouter()
   const cameraViewContainer = useRef<HTMLDivElement>(null);
   const resultsContainer = useRef<HTMLDivElement>(null);
 
@@ -52,6 +53,7 @@ function VideoCapture() {
             console.log(result);
             for (let item of result.barcodeResultItems) {
               resultsContainer.current!.textContent += `${item.formatString}: ${item.text}\n\n`;
+              router.push(`/results?barcode=${item.text}`);
             }
           },
         });

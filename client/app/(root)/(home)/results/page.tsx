@@ -3,7 +3,7 @@ import { cache, Suspense } from "react";
 import { notFound } from "next/navigation";
 import ProductDetails from "@/components/shared/ProductDetails";
 import LoadingSpinner from "@/components/shared/LoadingSpinner";
-import fetch from "node-fetch";
+
 
 export const dynamic = "force-dynamic";
 
