@@ -3,8 +3,43 @@
 import { generateText } from 'ai';
 import { google } from '@ai-sdk/google';
 
-export async function getAnswer(question: string) {
+export async function getAnswer(question: string,userData:string) {
   console.log('getAnswer', question);
+  const dummyUser={
+    "name": "User",
+    "age": 28,
+    "dietaryPreferences": {
+      "vegan": true,
+      "glutenFree": true
+    },
+    "healthGoals": [
+      "Weight management",
+      "Improve gut health"
+    ],
+    "allergies": [
+      "Nuts",
+      "Soy"
+    ],
+    "shoppingPreferences": {
+      "organic": true,
+      "budget": "moderate"
+    },
+    "activityLevel": "Moderately active",
+    "alerts": {
+      "sugar": true,
+      "highSodium": true
+    },
+    "specialInstructions": [
+      "Display eco-friendly product options"
+    ],
+    "consumptionTipPreference": "Prefer direct comparisons and detailed analysis",
+    "favoriteFoods": [
+      "Kale",
+      "Quinoa",
+      "Almond milk"
+    ]
+  }
+  
   const systemPrompt=`
    
 
@@ -25,20 +60,10 @@ Analyze the ingredient data of the scanned food item and provide a clear, one-li
 When summarizing, include links where applicable for users to explore detailed information, using the provided format for ease of access.
 
 You will given user data also  whivh you can use to give user some insights ,give answer in an insightful manner: This 
-
 {USER DATA}
-Name: User.
-Age: 28
-Dietary Preferences: Vegan, gluten-free
-Health Goals: Weight management, improve gut health
-Allergies: Nuts, soy
-Shopping Preferences: Prefers organic products, moderate budget
-Activity Level: Moderately active
-Alerts: Notifications for sugar and high sodium products
-Special Instructions: Display eco-friendly product options
-Consumption Tip Preference: Prefer direct comparisons and detailed analysis
-Favorite Foods: Kale, quinoa, almond milk
-{User DATA} Ypu can also use web search for inisights on recommended alternatives
+${userData  ? userData : JSON.stringify(dummyUser, null, 2)}
+{USER DATA}
+ You can also use web search for inisights on recommended alternatives
  generate more insightful stats from Product json given by user
 in markdown form  containg 4 insight with title and description of one line each
 

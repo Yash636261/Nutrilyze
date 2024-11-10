@@ -1,7 +1,8 @@
 'use client'
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
+import localForage from "localforage"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -31,6 +32,8 @@ import {
   Bell,
   Sparkles,
   Apple,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react"
 import { LucideIcon } from "lucide-react"
 
@@ -61,7 +64,7 @@ interface FormData {
   favoriteFoods: string[]
 }
 
-export default function Component() {
+export default function UserProfileForm() {
   const [step, setStep] = useState(1)
   const [formData, setFormData] = useState<FormData>({
     name: "",
@@ -77,10 +80,20 @@ export default function Component() {
     favoriteFoods: [],
   })
 
+  useEffect(() => {
+    const loadSavedData = async () => {
+      const savedData = await localForage.getItem<FormData>("userProfileData")
+      if (savedData) {
+        setFormData(savedData)
+      }
+    }
+    loadSavedData()
+  }, [])
+
   const dietaryPreferences = [
-    { id: "vegan", label: "Vegan" },
-    { id: "vegetarian", label: "Vegetarian" },
-    { id: "gluten-free", label: "Gluten-free" },
+    { id: "vegan", label: "Vegan", icon: Leaf },
+    { id: "vegetarian", label: "Vegetarian", icon: Salad },
+    { id: "gluten-free", label: "Gluten-free", icon: Wheat },
   ]
 
   const healthGoals = [
@@ -89,26 +102,26 @@ export default function Component() {
   ]
 
   const allergies = [
-    { id: "nuts", label: "Nuts" },
-    { id: "soy", label: "Soy" },
+    { id: "nuts", label: "Nuts", icon: Apple },
+    { id: "soy", label: "Soy", icon: Sparkles },
   ]
 
   const shoppingPreferences = [
-    { id: "organic", label: "Prefers organic products" },
-    { id: "moderate-budget", label: "Moderate budget" },
+    { id: "organic", label: "Prefers organic products", icon: Leaf },
+    { id: "moderate-budget", label: "Moderate budget", icon: ShoppingBag },
   ]
 
   const activityLevels = [
-    { id: "sedentary", label: "Sedentary" },
-    { id: "lightly-active", label: "Lightly active" },
-    { id: "moderately-active", label: "Moderately active" },
-    { id: "very-active", label: "Very active" },
-    { id: "extra-active", label: "Extra active" },
+    { id: "sedentary", label: "Sedentary", icon: Moon },
+    { id: "lightly-active", label: "Lightly active", icon: Utensils },
+    { id: "moderately-active", label: "Moderately active", icon: Dumbbell },
+    { id: "very-active", label: "Very active", icon: Heart },
+    { id: "extra-active", label: "Extra active", icon: Sparkles },
   ]
 
   const alerts = [
-    { id: "sugar", label: "Notifications for sugar" },
-    { id: "high-sodium", label: "Notifications for high sodium products" },
+    { id: "sugar", label: "Notifications for sugar", icon: Candy },
+    { id: "high-sodium", label: "Notifications for high sodium products", icon: Bell },
   ]
 
   const router = useRouter()
@@ -132,8 +145,7 @@ export default function Component() {
     if (step < 5) {
       setStep((prev) => prev + 1)
     } else {
-      console.log("Onboarding complete!", formData);
-      router.push("/scan");
+      handleSubmit()
     }
   }
 
@@ -143,10 +155,20 @@ export default function Component() {
     }
   }
 
+  const handleSubmit = async () => {
+    try {
+      await localForage.setItem("userProfileData", formData)
+      console.log("Profile saved successfully")
+      router.push("/scan")
+    } catch (error) {
+      console.error("Error saving profile:", error)
+    }
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-100 to-blue-200 dark:from-gray-900 dark:to-gray-800 p-4">
       <Card className="w-full max-w-2xl bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg shadow-xl rounded-3xl overflow-hidden">
-        <div className="p-6 space-y-6">
+        <div className="p-8 space-y-8">
           <div className="space-y-2">
             <div className="flex justify-between mb-2">
               {[1, 2, 3, 4, 5].map((i) => (
@@ -162,23 +184,24 @@ export default function Component() {
           </div>
 
           {step === 1 && (
-            <div className="space-y-4">
-              <h2 className="text-2xl font-bold text-center bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+            <div className="space-y-6">
+              <h2 className="text-3xl font-bold text-center bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
                 Personal Information
               </h2>
               <div className="space-y-4">
                 <div>
-                  <Label htmlFor="name">Name</Label>
+                  <Label htmlFor="name" className="text-lg font-medium">Name</Label>
                   <Input
                     id="name"
                     name="name"
                     value={formData.name}
                     onChange={handleInputChange}
                     placeholder="Enter your name"
+                    className="mt-1 text-lg"
                   />
                 </div>
                 <div>
-                  <Label htmlFor="age">Age</Label>
+                  <Label htmlFor="age" className="text-lg font-medium">Age</Label>
                   <Input
                     id="age"
                     name="age"
@@ -186,6 +209,7 @@ export default function Component() {
                     value={formData.age}
                     onChange={handleInputChange}
                     placeholder="Enter your age"
+                    className="mt-1 text-lg"
                   />
                 </div>
               </div>
@@ -193,147 +217,168 @@ export default function Component() {
           )}
 
           {step === 2 && (
-            <div className="space-y-4">
-              <h2 className="text-2xl font-bold text-center bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+            <div className="space-y-6">
+              <h2 className="text-3xl font-bold text-center bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
                 Dietary Preferences and Health Goals
               </h2>
-              <div className="space-y-4">
+              <div className="space-y-6">
                 <div>
-                  <Label>Dietary Preferences</Label>
-                  {dietaryPreferences.map((pref) => (
-                    <div key={pref.id} className="flex items-center space-x-2">
-                      <Checkbox
-                        id={pref.id}
-                        checked={formData.dietaryPreferences.includes(pref.id)}
-                        onCheckedChange={() => handleCheckboxChange("dietaryPreferences", pref.id)}
-                      />
-                      <label htmlFor={pref.id} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                        {pref.label}
-                      </label>
-                    </div>
-                  ))}
+                  <Label className="text-lg font-medium mb-2 block">Dietary Preferences</Label>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {dietaryPreferences.map((pref) => (
+                      <div key={pref.id} className="flex items-center space-x-3 bg-white dark:bg-gray-700 p-3 rounded-lg shadow-sm">
+                        <Checkbox
+                          id={pref.id}
+                          checked={formData.dietaryPreferences.includes(pref.id)}
+                          onCheckedChange={() => handleCheckboxChange("dietaryPreferences", pref.id)}
+                        />
+                        <label htmlFor={pref.id} className="text-sm font-medium flex items-center space-x-2">
+                          {pref.icon && <pref.icon className="w-5 h-5" />}
+                          <span>{pref.label}</span>
+                        </label>
+                      </div>
+                    ))}
+                  </div>
                 </div>
                 <div>
-                  <Label>Health Goals</Label>
-                  {healthGoals.map((goal) => (
-                    <div key={goal.id} className="flex items-center space-x-2">
-                      <Checkbox
-                        id={goal.id}
-                        checked={formData.healthGoals.includes(goal.id)}
-                        onCheckedChange={() => handleCheckboxChange("healthGoals", goal.id)}
-                      />
-                      <label htmlFor={goal.id} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                        {goal.label}
-                      </label>
-                    </div>
-                  ))}
+                  <Label className="text-lg font-medium mb-2 block">Health Goals</Label>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {healthGoals.map((goal) => (
+                      <div key={goal.id} className="flex items-center space-x-3 bg-white dark:bg-gray-700 p-3 rounded-lg shadow-sm">
+                        <Checkbox
+                          id={goal.id}
+                          checked={formData.healthGoals.includes(goal.id)}
+                          onCheckedChange={() => handleCheckboxChange("healthGoals", goal.id)}
+                        />
+                        <label htmlFor={goal.id} className="text-sm font-medium flex items-center space-x-2">
+                          {goal.icon && <goal.icon className="w-5 h-5" />}
+                          <span>{goal.label}</span>
+                        </label>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
           )}
 
           {step === 3 && (
-            <div className="space-y-4">
-              <h2 className="text-2xl font-bold text-center bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+            <div className="space-y-6">
+              <h2 className="text-3xl font-bold text-center bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
                 Allergies and Shopping Preferences
               </h2>
-              <div className="space-y-4">
+              <div className="space-y-6">
                 <div>
-                  <Label>Allergies</Label>
-                  {allergies.map((allergy) => (
-                    <div key={allergy.id} className="flex items-center space-x-2">
-                      <Checkbox
-                        id={allergy.id}
-                        checked={formData.allergies.includes(allergy.id)}
-                        onCheckedChange={() => handleCheckboxChange("allergies", allergy.id)}
-                      />
-                      <label htmlFor={allergy.id} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                        {allergy.label}
-                      </label>
-                    </div>
-                  ))}
+                  <Label className="text-lg font-medium mb-2 block">Allergies</Label>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {allergies.map((allergy) => (
+                      <div key={allergy.id} className="flex items-center space-x-3 bg-white dark:bg-gray-700 p-3 rounded-lg shadow-sm">
+                        <Checkbox
+                          id={allergy.id}
+                          checked={formData.allergies.includes(allergy.id)}
+                          onCheckedChange={() => handleCheckboxChange("allergies", allergy.id)}
+                        />
+                        <label htmlFor={allergy.id} className="text-sm font-medium flex items-center space-x-2">
+                          {allergy.icon && <allergy.icon className="w-5 h-5" />}
+                          <span>{allergy.label}</span>
+                        </label>
+                      </div>
+                    ))}
+                  </div>
                 </div>
                 <div>
-                  <Label>Shopping Preferences</Label>
-                  {shoppingPreferences.map((pref) => (
-                    <div key={pref.id} className="flex items-center space-x-2">
-                      <Checkbox
-                        id={pref.id}
-                        checked={formData.shoppingPreferences.includes(pref.id)}
-                        onCheckedChange={() => handleCheckboxChange("shoppingPreferences", pref.id)}
-                      />
-                      <label htmlFor={pref.id} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                        {pref.label}
-                      </label>
-                    </div>
-                  ))}
+                  <Label className="text-lg font-medium mb-2 block">Shopping Preferences</Label>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {shoppingPreferences.map((pref) => (
+                      <div key={pref.id} className="flex items-center space-x-3 bg-white dark:bg-gray-700 p-3 rounded-lg shadow-sm">
+                        <Checkbox
+                          id={pref.id}
+                          checked={formData.shoppingPreferences.includes(pref.id)}
+                          onCheckedChange={() => handleCheckboxChange("shoppingPreferences", pref.id)}
+                        />
+                        <label htmlFor={pref.id} className="text-sm font-medium flex items-center space-x-2">
+                          {pref.icon && <pref.icon className="w-5 h-5" />}
+                          <span>{pref.label}</span>
+                        </label>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
           )}
 
           {step === 4 && (
-            <div className="space-y-4">
-              <h2 className="text-2xl font-bold text-center bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+            <div className="space-y-6">
+              <h2 className="text-3xl font-bold text-center bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
                 Activity Level and Alerts
               </h2>
-              <div className="space-y-4">
+              <div className="space-y-6">
                 <div>
-                  <Label>Activity Level</Label>
+                  <Label className="text-lg font-medium mb-2 block">Activity Level</Label>
                   <RadioGroup
                     value={formData.activityLevel}
                     onValueChange={(value) => setFormData((prev) => ({ ...prev, activityLevel: value }))}
+                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
                   >
                     {activityLevels.map((level) => (
-                      <div key={level.id} className="flex items-center space-x-2">
+                      <div key={level.id} className="flex items-center space-x-3 bg-white dark:bg-gray-700 p-3 rounded-lg shadow-sm">
                         <RadioGroupItem value={level.id} id={level.id} />
-                        <Label htmlFor={level.id}>{level.label}</Label>
+                        <Label htmlFor={level.id} className="text-sm font-medium flex items-center space-x-2">
+                          {level.icon && <level.icon className="w-5 h-5" />}
+                          <span>{level.label}</span>
+                        </Label>
                       </div>
                     ))}
                   </RadioGroup>
                 </div>
                 <div>
-                  <Label>Alerts</Label>
-                  {alerts.map((alert) => (
-                    <div key={alert.id} className="flex items-center space-x-2">
-                      <Checkbox
-                        id={alert.id}
-                        checked={formData.alerts.includes(alert.id)}
-                        onCheckedChange={() => handleCheckboxChange("alerts", alert.id)}
-                      />
-                      <label htmlFor={alert.id} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                        {alert.label}
-                      </label>
-                    </div>
-                  ))}
+                  <Label className="text-lg font-medium mb-2 block">Alerts</Label>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {alerts.map((alert) => (
+                      <div key={alert.id} className="flex items-center space-x-3 bg-white dark:bg-gray-700 p-3 rounded-lg shadow-sm">
+                        <Checkbox
+                          id={alert.id}
+                          checked={formData.alerts.includes(alert.id)}
+                          onCheckedChange={() => handleCheckboxChange("alerts", alert.id)}
+                        />
+                        <label htmlFor={alert.id} className="text-sm font-medium flex items-center space-x-2">
+                          {alert.icon && <alert.icon className="w-5 h-5" />}
+                          <span>{alert.label}</span>
+                        </label>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
           )}
 
           {step === 5 && (
-            <div className="space-y-4">
-              <h2 className="text-2xl font-bold text-center bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+            <div className="space-y-6">
+              <h2 className="text-3xl font-bold text-center bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
                 Additional Preferences
               </h2>
-              <div className="space-y-4">
+              <div className="space-y-6">
                 <div>
-                  <Label htmlFor="specialInstructions">Special Instructions</Label>
+                  <Label htmlFor="specialInstructions" className="text-lg font-medium">Special Instructions</Label>
                   <Textarea
                     id="specialInstructions"
                     name="specialInstructions"
                     value={formData.specialInstructions}
                     onChange={handleInputChange}
                     placeholder="Enter any special instructions"
+                    className="mt-1"
+                    rows={4}
                   />
                 </div>
                 <div>
-                  <Label htmlFor="consumptionTipPreference">Consumption Tip Preference</Label>
+                  <Label htmlFor="consumptionTipPreference" className="text-lg font-medium">Consumption Tip Preference</Label>
                   <Select
                     value={formData.consumptionTipPreference}
                     onValueChange={(value) => setFormData((prev) => ({ ...prev, consumptionTipPreference: value }))}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="mt-1">
                       <SelectValue placeholder="Select your preference" />
                     </SelectTrigger>
                     <SelectContent>
@@ -343,33 +388,34 @@ export default function Component() {
                   </Select>
                 </div>
                 <div>
-                  <Label htmlFor="favoriteFoods">Favorite Foods</Label>
+                  <Label htmlFor="favoriteFoods" className="text-lg font-medium">Favorite Foods</Label>
                   <Input
                     id="favoriteFoods"
                     name="favoriteFoods"
                     value={formData.favoriteFoods.join(", ")}
                     onChange={(e) => setFormData((prev) => ({ ...prev, favoriteFoods: e.target.value.split(", ") }))}
                     placeholder="Enter your favorite foods (comma-separated)"
+                    className="mt-1"
                   />
                 </div>
               </div>
             </div>
           )}
 
-          <div className="flex justify-between mt-6">
+          <div className="flex justify-between mt-8">
             <Button
               onClick={handleBack}
               disabled={step === 1}
               variant="outline"
-              className="rounded-full bg-white/50 dark:bg-gray-700/50 hover:bg-white/80 dark:hover:bg-gray-700/80"
+              className="rounded-full bg-white/50 dark:bg-gray-700/50 hover:bg-white/80 dark:hover:bg-gray-700/80 px-6 py-2 text-lg flex items-center"
             >
-              Back
+              <ChevronLeft className="w-5 h-5 mr-2" /> Back
             </Button>
             <Button
               onClick={handleNext}
-              className="rounded-full bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white"
+              className="rounded-full bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white px-6 py-2 text-lg flex items-center"
             >
-              {step === 5 ? "Complete" : "Next"}
+              {step === 5 ? "Complete" : "Next"} <ChevronRight className="w-5 h-5 ml-2" />
             </Button>
           </div>
         </div>
