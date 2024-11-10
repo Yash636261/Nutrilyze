@@ -29,8 +29,8 @@ export default function Home() {
   const showImageCapture = () => setMode(Modes.IMAGE_CAPTURE);
 
   return (
-    <div className="hello-world-page">
-      <div className="buttons-container">
+    <div className="hello-world-page mx-auto">
+      <div className="buttons-container flex justify-center items-center mx-auto">
         <button
           style={{
             backgroundColor:
@@ -50,7 +50,7 @@ export default function Home() {
           Decode Image
         </button>
       </div>
-      <div className="container">
+      <div className="container mx-auto">
         {mode === Modes.VIDEO_CAPTURE ? <VideoCapture /> : <ImageCapture />}
       </div>
     </div>
