@@ -1,16 +1,19 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "@/dynamsoft.config"; // import side effects. The license, engineResourcePath, so on.
 import { CameraEnhancer, CameraView } from "dynamsoft-camera-enhancer";
 import { CaptureVisionRouter } from "dynamsoft-capture-vision-router";
 import { MultiFrameResultCrossFilter } from "dynamsoft-utility";
-import "./VideoCapture.css";
-import { useRouter } from 'next/navigation'
+import { useRouter } from "next/navigation";
+import { Camera, AlertCircle } from "lucide-react";
+
 const componentDestroyedErrorMsg = "VideoCapture Component Destroyed";
 
 function VideoCapture() {
-  const router = useRouter()
+  const router = useRouter();
   const cameraViewContainer = useRef<HTMLDivElement>(null);
   const resultsContainer = useRef<HTMLDivElement>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [isScanning, setIsScanning] = useState(false);
 
   useEffect((): any => {
     let resolveInit: () => void;
@@ -24,6 +27,7 @@ function VideoCapture() {
 
     (async () => {
       try {
+        setIsScanning(true);
         // Create a `CameraEnhancer` instance for camera control and a `CameraView` instance for UI control.
         const cameraView = await CameraView.createInstance();
         if (isDestroyed) {
@@ -85,8 +89,10 @@ function VideoCapture() {
         } else {
           let errMsg = ex.message || ex;
           console.error(errMsg);
-          alert(errMsg);
+          setError(errMsg);
         }
+      } finally {
+        setIsScanning(false);
       }
     })();
 
@@ -103,21 +109,37 @@ function VideoCapture() {
         cameraEnhancer?.dispose();
       } catch (_) {}
     };
-  }, []);
+  }, [router]);
 
   return (
-    <div>
-      <div
-        ref={cameraViewContainer}
-        style={{
-          width: "100%",
-          height: "70vh",
-          background: "#eee",
-        }}
-      ></div>
-      <br />
-      Results:
-      <div ref={resultsContainer} className="results"></div>
+    <div className="max-w-lg mx-auto p-4">
+      <div className="relative">
+        <div
+          ref={cameraViewContainer}
+          className="aspect-video bg-gray-200 rounded-lg overflow-hidden shadow-lg"
+        ></div>
+        {isScanning && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-lg">
+            <div className="text-white text-center">
+              <Camera className="animate-pulse w-12 h-12 mx-auto mb-2" />
+              <p>Initializing camera...</p>
+            </div>
+          </div>
+        )}
+      </div>
+      {error && (
+        <div className="mt-4 p-4 bg-red-100 text-red-700 rounded-lg flex items-center">
+          <AlertCircle className="w-5 h-5 mr-2 flex-shrink-0" />
+          <p>{error}</p>
+        </div>
+      )}
+      {/* <div className="mt-4">
+        <h2 className="text-lg font-semibold mb-2">Results:</h2>
+        <div
+          ref={resultsContainer}
+          className="p-4 bg-gray-100 rounded-lg min-h-[100px] whitespace-pre-wrap"
+        ></div>
+      </div> */}
     </div>
   );
 }

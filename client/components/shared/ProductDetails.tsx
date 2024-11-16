@@ -1,12 +1,13 @@
 "use client";
 
-import Image from 'next/image'
-import Insights from './Insights'
-import { useState } from 'react'
-import { Card } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import NutritionChart from "@/components/shared/NutritionChart"
-import { ArrowLeft, Heart, Share2, X, Check, Info } from "lucide-react"
+import Image from "next/image";
+import Insights from "./Insights";
+import { useState } from "react";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import NutritionChart from "@/components/shared/NutritionChart";
+import { ArrowLeft, Heart, Share2, X, Check, Info, User } from "lucide-react";
+import Link from "next/link";
 import {
   Tooltip,
   TooltipContent,
@@ -34,9 +35,8 @@ type ProductData = {
 };
 
 export default function ProductDetails({ product }: { product: ProductData }) {
-  console.log("Vinayak", product);
-
   const [isFavorite, setIsFavorite] = useState(false);
+  const [isSharing, setIsSharing] = useState(false);
 
   const nutritionScore = product?.nutriscoreScore || 9;
   const maxScore = 100;
@@ -127,22 +127,65 @@ export default function ProductDetails({ product }: { product: ProductData }) {
     e: "bg-red-500",
   };
 
+  const goback = () => {
+    window.history.back();
+  };
+
+  const handleShare = async () => {
+    setIsSharing(true);
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: product.productName,
+          text: `Check out this product: ${product.productName} by ${product.brand}`,
+          url: window.location.href,
+        });
+      } else {
+        // Fallback for browsers that don't support the Web Share API
+        await navigator.clipboard.writeText(window.location.href);
+        alert("Link copied to clipboard!");
+      }
+    } catch (error) {
+      console.error("Error sharing:", error);
+    } finally {
+      setIsSharing(false);
+    }
+  };
+
   return (
     <div className="bg-white dark:bg-gray-800 overflow-hidden rounded-lg shadow-lg">
       {/* Header */}
       <div className="flex items-center justify-between p-4 lg:p-6 border-b dark:border-gray-700">
-        <Button variant="ghost" size="icon" aria-label="Go back">
+        <Button
+          variant="ghost"
+          size="icon"
+          aria-label="Go back"
+          onClick={goback}
+          className="hover:bg-gray-100 dark:hover:bg-gray-700"
+        >
           <ArrowLeft className="h-6 w-6" />
         </Button>
-        <div>
+        <div className="text-center">
           <h1 className="text-2xl font-semibold dark:text-white">
             {product.productName}
           </h1>
           <p className="text-gray-500 dark:text-gray-400">{product.brand}</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="ghost" size="icon" aria-label="Share product">
-            <Share2 className="h-6 w-6" />
+          <Link href="/profile">
+            <div className="hover:bg-gray-100 dark:hover:bg-gray-700 p-2 rounded-full">
+              <User className="h-5 w-5" />
+            </div>
+          </Link>
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label="Share product"
+            onClick={handleShare}
+            disabled={isSharing}
+            className="hover:bg-gray-100 dark:hover:bg-gray-700"
+          >
+            <Share2 className={`h-6 w-6 ${isSharing ? "animate-pulse" : ""}`} />
           </Button>
           <Button
             variant="ghost"
@@ -151,6 +194,7 @@ export default function ProductDetails({ product }: { product: ProductData }) {
               isFavorite ? "Remove from favorites" : "Add to favorites"
             }
             onClick={() => setIsFavorite(!isFavorite)}
+            className="hover:bg-gray-100 dark:hover:bg-gray-700"
           >
             <Heart
               className={`h-6 w-6 ${
@@ -165,14 +209,15 @@ export default function ProductDetails({ product }: { product: ProductData }) {
         {/* Left Column */}
         <div className="lg:w-1/2 p-4 lg:p-6 lg:border-r dark:border-gray-700">
           {/* Product Info */}
-          <div className="flex gap-4 items-start">
-            <div className="mt-4">
-            <NutritionChart nutriments={product.nutriments} />
-          </div>
-          <div>
-              <h2 className="text-xl font-semibold mb-4 dark:text-white">Nutritional Insights</h2>
+          <div className="flex flex-col md:flex-row gap-4 items-start">
+            <div className="w-full md:w-1/2">
+              <NutritionChart nutriments={product.nutriments} />
+            </div>
+            <div className="w-full md:w-1/2">
+              <h2 className="text-xl font-semibold mb-4 dark:text-white">
+                Nutritional Insights
+              </h2>
               <Insights product={product} />
-             
             </div>
           </div>
 
@@ -189,8 +234,8 @@ export default function ProductDetails({ product }: { product: ProductData }) {
               ).map((grade) => (
                 <div
                   key={grade}
-                  className={`flex-1 h-10 rounded-md flex items-center justify-center text-white font-bold ${
-                    grade === product.nutriscoreGrade
+                  className={`flex-1 h-10 rounded-md flex items-center justify-center text-white font-bold transition-colors ${
+                    grade === product.nutriscoreGrade.toLowerCase()
                       ? nutriScoreColors[grade]
                       : "bg-gray-200 dark:bg-gray-700"
                   }`}
@@ -202,7 +247,7 @@ export default function ProductDetails({ product }: { product: ProductData }) {
           </div>
 
           {/* Score Circle */}
-          <div className="mt-8 flex items-center gap-6">
+          <div className="mt-8 flex flex-col md:flex-row items-center gap-6">
             <div className="relative w-40 h-40">
               <svg className="w-full h-full" viewBox="0 0 36 36">
                 <path
@@ -222,12 +267,12 @@ export default function ProductDetails({ product }: { product: ProductData }) {
                   stroke="#22c55e"
                   strokeWidth="3"
                   strokeDasharray={`${(nutritionScore / maxScore) * 100}, 100`}
-                  className="rotate-90 origin-center"
+                  className="rotate-90 origin-center transition-all duration-1000 ease-out"
                 />
                 <text
                   x="18"
                   y="22"
-                  className="text-xl font-bold"
+                  className="text-sm font-bold"
                   textAnchor="middle"
                   fill="currentColor"
                 >
@@ -242,7 +287,10 @@ export default function ProductDetails({ product }: { product: ProductData }) {
               <p className="text-gray-500 dark:text-gray-400 mt-2">
                 This score helps you to estimate the product quality
               </p>
-              <Button variant="link" className="p-0 h-auto text-green-500 mt-2">
+              <Button
+                variant="link"
+                className="p-0 h-auto text-green-500 mt-2 hover:underline"
+              >
                 Show more
               </Button>
             </div>
@@ -256,11 +304,11 @@ export default function ProductDetails({ product }: { product: ProductData }) {
             <h2 className="text-2xl font-semibold mb-4 dark:text-white">
               Nutrition Preference
             </h2>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {nutritionPreferences.map((pref) => (
                 <Card
                   key={pref.id}
-                  className="p-4 flex items-center justify-between"
+                  className="p-4 flex items-center justify-between hover:shadow-md transition-shadow"
                 >
                   <div className="flex items-center gap-3">
                     <span className="text-2xl" aria-hidden="true">
@@ -295,7 +343,7 @@ export default function ProductDetails({ product }: { product: ProductData }) {
               {nutritionLevels.map((level) => (
                 <Card
                   key={level.id}
-                  className="p-4 flex items-center justify-between"
+                  className="p-4 flex items-center justify-between hover:shadow-md transition-shadow"
                 >
                   <div className="flex items-center gap-3">
                     <span className="text-2xl" aria-hidden="true">
@@ -306,7 +354,7 @@ export default function ProductDetails({ product }: { product: ProductData }) {
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="text-gray-600 dark:text-gray-300">
+                    <span className="text-gray-600 dark:text-gray-300 capitalize">
                       {level.level}
                     </span>
                     <div
@@ -323,8 +371,8 @@ export default function ProductDetails({ product }: { product: ProductData }) {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <div className="mt-8 flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg cursor-help">
-                  <Info className="h-5 w-5" aria-hidden="true" />
+                <div className="mt-8 flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg cursor-help transition-colors hover:bg-gray-100 dark:hover:bg-gray-700">
+                  <Info className="h-5 w-5 flex-shrink-0" aria-hidden="true" />
                   <p>
                     Disclaimer: The information provided may be incomplete or
                     incorrect.
